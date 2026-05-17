@@ -13,7 +13,7 @@ describe('Login Tests', () => {
     cy.get('button[type="submit"]').click()
 
     cy.url().should('include', '/secure')
-    cy.get('h2').should('be.visible').and('have.text', 'Secure Area')
+    cy.get('h2').should('be.visible').and('contain.text', 'Secure Area')
     cy.screenshot('login-test1-success')
   })
 

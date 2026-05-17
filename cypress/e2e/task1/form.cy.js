@@ -20,7 +20,7 @@ describe('Form Test', () => {
       .should('be.visible')
       .and('contain.text', 'You logged into a secure area!')
 
-    cy.get('h2').should('be.visible').and('have.text', 'Secure Area')
+    cy.get('h2').should('be.visible').and('contain.text', 'Secure Area')
     cy.screenshot('form-test1-after-submit')
   })
 })

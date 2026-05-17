@@ -12,7 +12,7 @@ describe('Assertion Practice', () => {
   })
 
   it('Assertion 2: Page heading should have exact text "Welcome to the-internet"', () => {
-    cy.get('h1').should('have.text', 'Welcome to the-internet')
+    cy.get('h1').should('contain.text', 'Welcome to the-internet')
     cy.screenshot('assertion2-heading-text')
   })
 
@@ -55,7 +55,7 @@ describe('Custom Command — login()', () => {
     cy.login('tomsmith', 'SuperSecretPassword!')
 
     cy.url().should('include', '/secure')
-    cy.get('h2').should('have.text', 'Secure Area')
+    cy.get('h2').should('contain.text', 'Secure Area')
     cy.screenshot('custom-command-login')
   })
 

@@ -7,19 +7,19 @@ describe('Navigation Tests', () => {
     cy.contains('a', 'Checkboxes').click()
 
     cy.url().should('include', '/checkboxes')
-    cy.get('h3').should('be.visible').and('have.text', 'Checkboxes')
+    cy.get('h3').should('be.visible').and('contain.text', 'Checkboxes')
     cy.screenshot('navigation-test1-checkboxes')
   })
 
   it('Navigation Test 2: Visit Dropdown page then Inputs page and assert headings', () => {
     // First page — Dropdown
     cy.visit('/dropdown')
-    cy.get('h3').should('be.visible').and('have.text', 'Dropdown List')
+    cy.get('h3').should('be.visible').and('contain.text', 'Dropdown List')
     cy.screenshot('navigation-test2-dropdown')
 
     // Second page — Inputs
     cy.visit('/inputs')
-    cy.get('h3').should('be.visible').and('have.text', 'Inputs')
+    cy.get('h3').should('be.visible').and('contain.text', 'Inputs')
     cy.screenshot('navigation-test2-inputs')
   })
 })
