@@ -1,20 +1,34 @@
-// Task 2 — Custom Commands
-// Reusable commands defined here are available in all spec files
+// Custom Commands
 
 /**
- * Custom login command — fills username & password then clicks submit.
- * Usage: cy.login('standard_user', 'secret_sauce')
+ * cy.login(username, password)
+ * Uses cy.session() to log in once and cache the session.
+ * Subsequent calls restore the cached session instead of reloading the page,
+ * which avoids repeated slow page loads on every test.
  */
 Cypress.Commands.add('login', (username, password) => {
-  cy.visit('/')
-  cy.get('[data-test="username"]').type(username)
-  cy.get('[data-test="password"]').type(password)
-  cy.get('[data-test="login-button"]').click()
+  cy.session(
+    [username, password],
+    () => {
+      cy.visit('/', { timeout: 120000 })
+      cy.get('[data-test="username"]', { timeout: 15000 }).type(username)
+      cy.get('[data-test="password"]').type(password)
+      cy.get('[data-test="login-button"]').click()
+      cy.url({ timeout: 15000 }).should('include', '/inventory.html')
+    },
+    {
+      validate() {
+        cy.visit('/inventory.html', { timeout: 120000 })
+        cy.url().should('include', '/inventory.html')
+      },
+    }
+  )
+  cy.visit('/inventory.html', { timeout: 120000 })
 })
 
 /**
- * Custom logout command — opens burger menu and clicks Logout.
- * Usage: cy.logout()
+ * cy.logout()
+ * Opens burger menu and clicks Logout.
  */
 Cypress.Commands.add('logout', () => {
   cy.get('#react-burger-menu-btn').click()
@@ -23,7 +37,8 @@ Cypress.Commands.add('logout', () => {
 })
 
 /**
- * Custom addToCart command — adds a product by its data-test id slug.
+ * cy.addToCart(productSlug)
+ * Adds a product by its data-test id slug.
  * Usage: cy.addToCart('sauce-labs-backpack')
  */
 Cypress.Commands.add('addToCart', (productSlug) => {

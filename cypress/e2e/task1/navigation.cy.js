@@ -3,11 +3,7 @@
 
 describe('Navigation Tests', () => {
   beforeEach(() => {
-    cy.visit('/')
-    cy.get('[data-test="username"]').type('standard_user')
-    cy.get('[data-test="password"]').type('secret_sauce')
-    cy.get('[data-test="login-button"]').click()
-    cy.url().should('include', '/inventory.html')
+    cy.login('standard_user', 'secret_sauce')
   })
 
   it('Navigation Test 1: Clicking cart icon should open the cart page', () => {
@@ -18,11 +14,9 @@ describe('Navigation Tests', () => {
   })
 
   it('Navigation Test 2: Visit Products page then About page via burger menu', () => {
-    // Assert we are on the Products page
     cy.url().should('include', '/inventory.html')
     cy.get('.title').should('have.text', 'Products')
 
-    // Open burger menu and go to About
     cy.get('#react-burger-menu-btn').click()
     cy.get('#about_sidebar_link')
       .should('be.visible')

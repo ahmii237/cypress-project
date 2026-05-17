@@ -1,10 +1,9 @@
 // Task 1 — Login Tests
 // Website: https://www.saucedemo.com
-// Valid credentials: standard_user / secret_sauce
 
 describe('Login Tests', () => {
   beforeEach(() => {
-    cy.visit('/')
+    cy.visit('/', { timeout: 120000 })
   })
 
   it('Login Test 1: Valid credentials should redirect to products dashboard', () => {
@@ -12,7 +11,7 @@ describe('Login Tests', () => {
     cy.get('[data-test="password"]').type('secret_sauce')
     cy.get('[data-test="login-button"]').click()
 
-    cy.url().should('include', '/inventory.html')
+    cy.url({ timeout: 15000 }).should('include', '/inventory.html')
     cy.get('.title').should('be.visible').and('have.text', 'Products')
   })
 

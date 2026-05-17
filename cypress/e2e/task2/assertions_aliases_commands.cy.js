@@ -4,7 +4,6 @@
 describe('Assertion Practice', () => {
   beforeEach(() => {
     cy.login('standard_user', 'secret_sauce')
-    cy.url().should('include', '/inventory.html')
   })
 
   it('Assertion 1: Page title should be visible', () => {
@@ -31,16 +30,11 @@ describe('Alias Practice', () => {
   })
 
   it('Save cart badge as alias and assert it updates after adding a product', () => {
-    // Save the cart icon container as an alias
     cy.get('.shopping_cart_link').as('cartIcon')
-
-    // Cart badge should not be visible yet (no items)
     cy.get('@cartIcon').find('.shopping_cart_badge').should('not.exist')
 
-    // Add a product
     cy.get('[data-test="add-to-cart-sauce-labs-backpack"]').click()
 
-    // Reuse the alias — badge should now show 1
     cy.get('@cartIcon')
       .find('.shopping_cart_badge')
       .should('be.visible')
@@ -75,7 +69,6 @@ describe('Bonus — Extra Practice', () => {
     cy.get('[data-test="product_sort_container"]').as('sortDropdown')
     cy.get('@sortDropdown').select('lohi')
     cy.get('@sortDropdown').should('have.value', 'lohi')
-
     cy.get('.inventory_item_price').first().should('have.text', '$7.99')
   })
 
