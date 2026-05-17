@@ -6,7 +6,7 @@
 | Course | CSE482 Software Testing |
 | Instructor | Ms. Yella Mehroze |
 | Semester | 8th — Spring 2026 |
-| Website Under Test | https://www.saucedemo.com |
+| Website Under Test | https://the-internet.herokuapp.com |
 
 ---
 

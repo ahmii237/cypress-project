@@ -1,35 +1,39 @@
 // Task 1 — Login Tests
-// Website: https://www.saucedemo.com
+// Website: https://the-internet.herokuapp.com/login
+// Valid credentials: tomsmith / SuperSecretPassword!
 
 describe('Login Tests', () => {
   beforeEach(() => {
-    cy.visit('/', { timeout: 120000 })
+    cy.visit('/login')
   })
 
-  it('Login Test 1: Valid credentials should redirect to products dashboard', () => {
-    cy.get('[data-test="username"]').type('standard_user')
-    cy.get('[data-test="password"]').type('secret_sauce')
-    cy.get('[data-test="login-button"]').click()
+  it('Login Test 1: Valid credentials should redirect to secure area', () => {
+    cy.get('#username').type('tomsmith')
+    cy.get('#password').type('SuperSecretPassword!')
+    cy.get('button[type="submit"]').click()
 
-    cy.url({ timeout: 15000 }).should('include', '/inventory.html')
-    cy.get('.title').should('be.visible').and('have.text', 'Products')
+    cy.url().should('include', '/secure')
+    cy.get('h2').should('be.visible').and('have.text', 'Secure Area')
+    cy.screenshot('login-test1-success')
   })
 
   it('Login Test 2: Invalid password should show error message', () => {
-    cy.get('[data-test="username"]').type('standard_user')
-    cy.get('[data-test="password"]').type('wrong_password')
-    cy.get('[data-test="login-button"]').click()
+    cy.get('#username').type('tomsmith')
+    cy.get('#password').type('wrongpassword')
+    cy.get('button[type="submit"]').click()
 
-    cy.get('[data-test="error"]')
+    cy.get('#flash')
       .should('be.visible')
-      .and('contain.text', 'Username and password do not match')
+      .and('contain.text', 'Your password is invalid!')
+    cy.screenshot('login-test2-error')
   })
 
   it('Login Test 3: Empty fields should show validation message', () => {
-    cy.get('[data-test="login-button"]').click()
+    cy.get('button[type="submit"]').click()
 
-    cy.get('[data-test="error"]')
+    cy.get('#flash')
       .should('be.visible')
-      .and('contain.text', 'Username is required')
+      .and('contain.text', 'Your username is invalid!')
+    cy.screenshot('login-test3-empty')
   })
 })

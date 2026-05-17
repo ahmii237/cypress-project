@@ -1,84 +1,98 @@
 // Task 2 — Assertions, Aliases & Custom Commands
-// Website: https://www.saucedemo.com
+// Website: https://the-internet.herokuapp.com
 
 describe('Assertion Practice', () => {
   beforeEach(() => {
-    cy.login('standard_user', 'secret_sauce')
+    cy.visit('/')
   })
 
-  it('Assertion 1: Page title should be visible', () => {
-    cy.get('.title').should('be.visible')
+  it('Assertion 1: Main heading should be visible on the home page', () => {
+    cy.get('h1').should('be.visible')
+    cy.screenshot('assertion1-heading-visible')
   })
 
-  it('Assertion 2: App logo should have exact text "Swag Labs"', () => {
-    cy.get('.app_logo').should('have.text', 'Swag Labs')
+  it('Assertion 2: Page heading should have exact text "Welcome to the-internet"', () => {
+    cy.get('h1').should('have.text', 'Welcome to the-internet')
+    cy.screenshot('assertion2-heading-text')
   })
 
-  it('Assertion 3: Twitter icon link should have correct href attribute', () => {
-    cy.get('[data-test="social-twitter"]')
-      .should('have.attr', 'href', 'https://twitter.com/saucelabs')
+  it('Assertion 3: GitHub fork ribbon link should have correct href attribute', () => {
+    cy.get('a[href="https://github.com/tourdedave/the-internet"]')
+      .should('have.attr', 'href', 'https://github.com/tourdedave/the-internet')
+    cy.screenshot('assertion3-href-attribute')
   })
 
-  it('Negative Assertion: Error message should not exist on successful login', () => {
-    cy.get('[data-test="error"]').should('not.exist')
+  it('Negative Assertion: A non-existent element should not exist on the page', () => {
+    cy.get('#this-element-does-not-exist').should('not.exist')
+    cy.screenshot('assertion4-negative')
   })
 })
 
 describe('Alias Practice', () => {
-  beforeEach(() => {
-    cy.login('standard_user', 'secret_sauce')
-  })
+  it('Save dropdown element as alias and assert selected option changes', () => {
+    cy.visit('/dropdown')
 
-  it('Save cart badge as alias and assert it updates after adding a product', () => {
-    cy.get('.shopping_cart_link').as('cartIcon')
-    cy.get('@cartIcon').find('.shopping_cart_badge').should('not.exist')
+    // Save the dropdown as an alias
+    cy.get('#dropdown').as('myDropdown')
 
-    cy.get('[data-test="add-to-cart-sauce-labs-backpack"]').click()
+    // Assert default value is empty (no option selected yet)
+    cy.get('@myDropdown').should('be.visible')
 
-    cy.get('@cartIcon')
-      .find('.shopping_cart_badge')
-      .should('be.visible')
-      .and('have.text', '1')
+    // Select Option 1 using the alias
+    cy.get('@myDropdown').select('1')
+    cy.get('@myDropdown').should('have.value', '1')
+
+    // Reuse alias to select Option 2
+    cy.get('@myDropdown').select('2')
+    cy.get('@myDropdown').should('have.value', '2')
+
+    cy.screenshot('alias-dropdown-selected')
   })
 })
 
 describe('Custom Command — login()', () => {
-  it('Custom login command should log in and land on the products page', () => {
-    cy.login('standard_user', 'secret_sauce')
-    cy.url().should('include', '/inventory.html')
-    cy.get('.title').should('have.text', 'Products')
+  it('Custom login command should log in and land on the secure area', () => {
+    cy.login('tomsmith', 'SuperSecretPassword!')
+
+    cy.url().should('include', '/secure')
+    cy.get('h2').should('have.text', 'Secure Area')
+    cy.screenshot('custom-command-login')
   })
 
   it('Custom logout command should return to the login page', () => {
-    cy.login('standard_user', 'secret_sauce')
+    cy.login('tomsmith', 'SuperSecretPassword!')
     cy.logout()
-    cy.get('[data-test="login-button"]').should('be.visible')
+
+    cy.url().should('include', '/login')
+    cy.get('button[type="submit"]').should('be.visible')
+    cy.screenshot('custom-command-logout')
   })
 })
 
 describe('Bonus — Extra Practice', () => {
-  beforeEach(() => {
-    cy.login('standard_user', 'secret_sauce')
+  it('Login button should be visible on the login page', () => {
+    cy.visit('/login')
+    cy.get('button[type="submit"]').should('be.visible')
+    cy.screenshot('bonus-button-visible')
   })
 
-  it('Product image should be visible on the inventory page', () => {
-    cy.get('.inventory_item_img').first().should('be.visible')
+  it('Dropdown: select option and assert page updates correctly', () => {
+    cy.visit('/dropdown')
+    cy.get('#dropdown').select('Option 1')
+    cy.get('#dropdown').should('have.value', '1')
+    cy.screenshot('bonus-dropdown-option1')
   })
 
-  it('Sort dropdown selects "Price (low to high)" and first item price updates', () => {
-    cy.get('[data-test="product_sort_container"]').as('sortDropdown')
-    cy.get('@sortDropdown').select('lohi')
-    cy.get('@sortDropdown').should('have.value', 'lohi')
-    cy.get('.inventory_item_price').first().should('have.text', '$7.99')
+  it('cy.contains() finds link by text on the home page', () => {
+    cy.visit('/')
+    cy.contains('a', 'Form Authentication').should('be.visible').click()
+    cy.url().should('include', '/login')
+    cy.screenshot('bonus-contains-link')
   })
 
-  it('cy.contains() finds Add to Cart button by text', () => {
-    cy.contains('Add to cart').first().should('be.visible').click()
-    cy.get('.shopping_cart_badge').should('have.text', '1')
-  })
-
-  it('Screenshot captured during inventory page visit', () => {
-    cy.get('.inventory_list').should('be.visible')
-    cy.screenshot('inventory-page')
+  it('Screenshot captured during home page visit', () => {
+    cy.visit('/')
+    cy.get('h1').should('be.visible')
+    cy.screenshot('bonus-home-page')
   })
 })

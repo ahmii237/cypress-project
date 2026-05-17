@@ -1,34 +1,26 @@
 // Task 1 — Form Test
-// Website: https://www.saucedemo.com
+// Website: https://the-internet.herokuapp.com/login
+// Tests the login form as a full form submission flow
 
 describe('Form Test', () => {
-  beforeEach(() => {
-    cy.login('standard_user', 'secret_sauce')
-  })
+  it('Form Test 1: Fill login form and assert successful secure area entry', () => {
+    cy.visit('/login')
 
-  it('Form Test 1: Fill checkout form and assert order confirmation', () => {
-    cy.get('[data-test="add-to-cart-sauce-labs-backpack"]').click()
+    // Fill out the form
+    cy.get('#username').type('tomsmith')
+    cy.get('#password').type('SuperSecretPassword!')
 
-    cy.get('.shopping_cart_link').click()
-    cy.url().should('include', '/cart.html')
+    cy.screenshot('form-test1-before-submit')
 
-    cy.get('[data-test="checkout"]').click()
-    cy.url().should('include', '/checkout-step-one.html')
+    // Submit the form
+    cy.get('button[type="submit"]').click()
 
-    cy.get('[data-test="firstName"]').type('Ali')
-    cy.get('[data-test="lastName"]').type('Hassan')
-    cy.get('[data-test="postalCode"]').type('54000')
-
-    cy.get('[data-test="continue"]').click()
-    cy.url().should('include', '/checkout-step-two.html')
-
-    cy.get('[data-test="finish"]').click()
-
-    cy.get('.complete-header')
+    // Assert success — flash message and secure area heading visible
+    cy.get('#flash')
       .should('be.visible')
-      .and('have.text', 'Thank you for your order!')
+      .and('contain.text', 'You logged into a secure area!')
 
-    cy.get('.complete-text').should('be.visible')
-    cy.screenshot('order-confirmation')
+    cy.get('h2').should('be.visible').and('have.text', 'Secure Area')
+    cy.screenshot('form-test1-after-submit')
   })
 })

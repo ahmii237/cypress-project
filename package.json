@@ -9,6 +9,6 @@
     "test:task2": "cypress run --spec 'cypress/e2e/task2/**/*.cy.js'"
   },
   "devDependencies": {
-    "cypress": "^13.17.0"
+    "cypress": "^12.17.4"
   }
 }
