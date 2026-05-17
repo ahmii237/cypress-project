@@ -1,0 +1,14 @@
+{
+  "name": "cypress-e2e-testing",
+  "version": "1.0.0",
+  "description": "CSE482 Software Testing - Terminal Lab Spring 2026 - Cypress E2E Tests",
+  "scripts": {
+    "test": "cypress run",
+    "test:open": "cypress open",
+    "test:task1": "cypress run --spec 'cypress/e2e/task1/**/*.cy.js'",
+    "test:task2": "cypress run --spec 'cypress/e2e/task2/**/*.cy.js'"
+  },
+  "devDependencies": {
+    "cypress": "^13.17.0"
+  }
+}
